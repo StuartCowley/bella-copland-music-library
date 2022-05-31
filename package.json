@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "node utils/create-database.js test",
+    "prestart": "node utils/create-database.js",
+    "start": "nodemon -r dotenv/config index.js",
+    "test": "mocha tests/**/*.js --exit --recursive --timeout 60000 --file ./tests/test-setup.js",
+    "posttest": "node utils/drop-database.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +22,15 @@
   },
   "homepage": "https://github.com/isabellacopland/music-library#readme",
   "devDependencies": {
-    "eslint": "^8.16.0"
+    "chai": "^4.3.6",
+    "dotenv": "^16.0.1",
+    "eslint": "^8.16.0",
+    "mocha": "^10.0.0",
+    "nodemon": "^2.0.16",
+    "supertest": "^6.2.3"
+  },
+  "dependencies": {
+    "express": "^4.18.1",
+    "mysql2": "^2.3.3"
   }
 }
