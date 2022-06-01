@@ -7,10 +7,5 @@ app.use(express.json());
 
 app.use('/artist', artistRouter);
 
-app.get("/", (req, res) => {
-    res.status(200)
-    res.send('Hello World')
-});
-
 module.exports = app;
 
