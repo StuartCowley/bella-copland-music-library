@@ -2,15 +2,19 @@ const getDb = require('../services/db');
 
 exports.create = async (req, res) => {
     const db = await getDb();
-    const { name, genre } = req.body;
+    const { name, genre, year } = req.body;
+    const artistId  = req.params.artistId;
   
     try {
-      await db.query('INSERT INTO Artist (name, genre) VALUES (?, ?)', [
+      await db.query('INSERT INTO Album (name, genre, year, artistId) VALUES (?, ?, ?, ?)', [
         name,
         genre,
+        year,
+        artistId
       ]);
   
       res.sendStatus(201);
+
     } catch (err) {
       res.sendStatus(500).json(err);
     }
@@ -18,13 +22,13 @@ exports.create = async (req, res) => {
     db.close();
   };
 
-  exports.read = async (_, res) => {
+  exports.read = async (req, res) => {
     const db = await getDb();
   
     try {
-      const [artists] = await db.query('SELECT * FROM Artist');
+      const [albums] = await db.query('SELECT * FROM Album');
   
-      res.status(200).json(artists);
+      res.status(201).json(albums);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -33,16 +37,16 @@ exports.create = async (req, res) => {
 
   exports.readById = async (req, res) => {
     const db = await getDb();
-    const { artistId } = req.params;
+    const { albumId } = req.params;
   
-    const [[artist]] = await db.query('SELECT * FROM Artist WHERE id = ?', [
-      artistId,
+    const [[album]] = await db.query('SELECT * FROM Album WHERE id = ?', [
+      albumId,
     ]);
   
-    if (!artist) {
+    if (!album) {
       res.sendStatus(404);
     } else {
-      res.status(200).json(artist);
+      res.status(201).json(album);
     }
   
     db.close();
@@ -51,12 +55,12 @@ exports.create = async (req, res) => {
   exports.update = async (req, res) => {
     const db = await getDb();
     const data = req.body;
-    const { artistId } = req.params;
+    const { albumId } = req.params;
   
     try {
       const [
         { affectedRows },
-      ] = await db.query('UPDATE Artist SET ? WHERE id = ?', [data, artistId]);
+      ] = await db.query('UPDATE Album SET ? WHERE id = ?', [data, albumId]);
   
       if (!affectedRows) {
         res.sendStatus(404);
@@ -72,10 +76,10 @@ exports.create = async (req, res) => {
 
   exports.delete = async (req, res) => {
     const db = await getDb()
-    const { artistId } = req.params
+    const { albumId } = req.params
   
     try {
-      const [{ affectedRows }] = await db.query('DELETE FROM Artist WHERE id = ?', [artistId])
+      const [{ affectedRows }] = await db.query('DELETE FROM Album WHERE id = ?', [albumId])
   
       if (!affectedRows) {
         res.sendStatus(404)
