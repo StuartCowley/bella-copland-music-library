@@ -6,12 +6,12 @@ const app = require('../src/app');
 
 describe('create album', () => {
     let db;
-    let artists; 
+    let albums; 
  
     beforeEach(async () => {
         db = await getDb();
  
-       [artists] = await db.query('SELECT * from Artist');
+       [albums] = await db.query('SELECT * from Album');
     });
  
     afterEach(async () => {
@@ -23,7 +23,7 @@ describe('create album', () => {
       describe('POST', () => {
         it('creates a new album in the database', async () => {
  
-         if(artists[0]) {
+         if(albums[0]) {
           const res = await request(app).post('/artist/1/album').send({
             name: 'Red',
             genre: 'Country',
